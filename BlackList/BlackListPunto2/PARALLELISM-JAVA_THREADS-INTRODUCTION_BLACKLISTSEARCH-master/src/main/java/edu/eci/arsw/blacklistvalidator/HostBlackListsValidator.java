@@ -34,17 +34,26 @@ public class HostBlackListsValidator {
      */
     public List<Integer> checkHost(String ipaddress, int N){
 
-        LinkedList<Integer> blackListOcurrences=new LinkedList<>();
 
-        int ocurrencesCount=0;
+
+
 
         HostBlacklistsDataSourceFacade skds=HostBlacklistsDataSourceFacade.getInstance();
 
         int checkedListsCount=0;
 
+        int ocurrencesCount=0;
+        LinkedList<Integer> blackListOcurrences=new LinkedList<>();
+
         int searchNumber = skds.getRegisteredServersCount()/N;
+
+        List<ServerSearch> searches = new LinkedList<>();
+
+        Object lock = new Object();
+
         for(int i=0; i<N ; i++){
-            ServerSearch search = new ServerSearch(i*searchNumber,(i+1)*searchNumber,skds,ocurrencesCount,ipaddress);
+            ServerSearch search = new ServerSearch(i*searchNumber,(i+1)*searchNumber,skds,ocurrencesCount,ipaddress,lock);
+            searches.add(search);
             search.start();
             try{
                 search.join(10);
@@ -52,19 +61,29 @@ public class HostBlackListsValidator {
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
-            if( search.getOcurrencesCount() != 0 ) {
-                blackListOcurrences.addAll(search.getOcurrences());
-                ocurrencesCount = search.getOcurrencesCount();
+
+        }
+        while(true) {
+            checkedListsCount = 0;
+            ocurrencesCount = 0;
+            blackListOcurrences.clear();
+            for (int i = 0; i < N; i++) {
+                ServerSearch search = searches.get(i);
+                if (search.getOcurrencesCount() != 0) {
+                    blackListOcurrences.addAll(search.getOcurrences());
+                    ocurrencesCount += search.getOcurrencesCount();
+                }
+                checkedListsCount += search.getCheckedListsCount();
             }
-            checkedListsCount += search.getCheckedListsCount();
 
+            if (ocurrencesCount >= BLACK_LIST_ALARM_COUNT) {
+                ServerSearch.setStop(true);
+                skds.reportAsNotTrustworthy(ipaddress);
+                break;
 
+            }
         }
-
-        if (ocurrencesCount>=BLACK_LIST_ALARM_COUNT){
-            skds.reportAsNotTrustworthy(ipaddress);
-        }
-        else{
+        if (!(ocurrencesCount >= BLACK_LIST_ALARM_COUNT)){
             skds.reportAsTrustworthy(ipaddress);
         }
 
