@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ConcurrentProgramming_Syncrhronization_DeadLocks_ThsSuspension-master/ConcurrentPrgExercises-Highlander-Prod-Cons.iml" filepath="$PROJECT_DIR$/ConcurrentProgramming_Syncrhronization_DeadLocks_ThsSuspension-master/ConcurrentPrgExercises-Highlander-Prod-Cons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Lab03ARSW.iml" filepath="$PROJECT_DIR$/.idea/Lab03ARSW.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BlackList/BlackListPunto2/PARALLELISM-JAVA_THREADS-INTRODUCTION_BLACKLISTSEARCH-master/PiDigits.iml" filepath="$PROJECT_DIR$/BlackList/BlackListPunto2/PARALLELISM-JAVA_THREADS-INTRODUCTION_BLACKLISTSEARCH-master/PiDigits.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BlackList/Lab02ARSW/wait-notify-excercise/PrimeFinder.iml" filepath="$PROJECT_DIR$/BlackList/Lab02ARSW/wait-notify-excercise/PrimeFinder.iml" />
+    </modules>
+  </component>
+</project>
